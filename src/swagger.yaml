@@ -1,0 +1,426 @@
+openapi: 3.0.0
+
+info:
+  title: API Title
+  description: OpenAPI specification for Astrology APIs
+  version: 1.0.0
+
+components:
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, arbitrary value for documentation purposes
+  responses:
+    success:
+      description: Ok
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: success
+
+    UnauthorizedError:
+      description: |
+        - Invalid credentials
+        - Expired access or refresh token
+        - Revoked access or refresh token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Unauthorized
+
+    NoContent:
+      description: |
+        - Empty body content
+      content:
+        application/json:
+          schema:
+            type: object
+
+    UnprocessableEntity:
+      description: Validation errors
+      content:
+        application/json:
+          schema:
+            type: object
+
+    Conflict:
+      description: Data already exists
+      content:
+        application/json:
+          schema:
+            type: object
+
+    PreconditionFailedException:
+      description: Data does not exist
+      content:
+        application/json:
+          schema:
+            type: object
+
+paths:
+  /people:
+    post:
+      description: Add People
+      summary: Add People
+      tags:
+        - People
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: shreya
+                birthDate:
+                  type: date
+                  example: "2000-06-11"
+                birthTime:
+                  type: string
+                  example: 02:00
+                timezone:
+                  type: string
+                  example: 5.5
+                latitude:
+                  type: string
+                  example: 21.17024
+                longitude:
+                  type: string
+                  example: 72.831062
+              required:
+                - name
+                - birthDate
+                - birthTime
+                - timezone
+                - latitude
+                - longitude
+      responses:
+        "200":
+          $ref: "#/components/responses/success"
+
+  /people/send-message:
+    post:
+      description: Send Message
+      summary: Send Message
+      tags:
+        - People
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                personId:
+                  type: number
+                  example: 1
+                message:
+                  type: string
+                  example: "hello"
+              required:
+                - personId
+                - message
+      responses:
+        "200":
+          $ref: "#/components/responses/success"
+
+  /api-function/horoscope/personal-characteristics:
+    get:
+      description: Get Personal Characteristics
+      summary: Get Personal Characteristics
+      tags:
+        - Api Functions
+      parameters:
+        - name: personId
+          type: number
+          in: query
+          required: true
+          example: 1
+        - name: lang
+          type: number
+          in: query
+          required: true
+          example: en
+      responses:
+        "200":
+          $ref: "#/components/responses/success"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedException"
+
+  /api-function/horoscope/ascendant-report:
+    get:
+      description: Get Ascendant Report
+      summary: Get Ascendant Report
+      tags:
+        - Api Functions
+      parameters:
+        - name: personId
+          type: number
+          in: query
+          required: true
+          example: 1
+        - name: lang
+          type: number
+          in: query
+          required: true
+          example: en
+      responses:
+        "200":
+          $ref: "#/components/responses/success"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedException"
+
+  /api-function/dashas/maha-dasha-predictions:
+    get:
+      description: Get Maha Dasha Predictions
+      summary: Get Maha Dasha Predictions
+      tags:
+        - Api Functions
+      parameters:
+        - name: personId
+          type: number
+          in: query
+          required: true
+          example: 1
+        - name: lang
+          type: number
+          in: query
+          required: true
+          example: en
+      responses:
+        "200":
+          $ref: "#/components/responses/success"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedException"
+
+  /api-function/dosha/manglik-dosh:
+    get:
+      description: Get Manglik Dosh Details
+      summary: Get Manglik Dosh Details
+      tags:
+        - Api Functions
+      parameters:
+        - name: personId
+          type: number
+          in: query
+          required: true
+          example: 1
+        - name: lang
+          type: number
+          in: query
+          required: true
+          example: en
+      responses:
+        "200":
+          $ref: "#/components/responses/success"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedException"
+
+  /api-function/dosha/kaalsarp-dosh:
+    get:
+      description: Get Kaalsarp Dosh Details
+      summary: Get Kaalsarp Dosh Details
+      tags:
+        - Api Functions
+      parameters:
+        - name: personId
+          type: number
+          in: query
+          required: true
+          example: 1
+        - name: lang
+          type: number
+          in: query
+          required: true
+          example: en
+      responses:
+        "200":
+          $ref: "#/components/responses/success"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedException"
+
+  /api-function/prediction/daily-sun:
+    get:
+      description: Get Daily Sun Predictions Details
+      summary: Get Daily Sun Predictions Details
+      tags:
+        - Api Functions
+      parameters:
+        - name: personId
+          type: number
+          in: query
+          required: true
+          example: 1
+        - name: date
+          type: string
+          in: query
+          required: true
+          example: 20/08/2024
+        - name: split
+          in: query
+          required: true
+          example: true
+        - name: lang
+          type: number
+          in: query
+          required: true
+          example: en
+      responses:
+        "200":
+          $ref: "#/components/responses/success"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedException"
+
+  /api-function/prediction/daily-moon:
+    get:
+      description: Get Daily Moon Predictions Details
+      summary: Get Daily Moon Predictions Details
+      tags:
+        - Api Functions
+      parameters:
+        - name: personId
+          type: number
+          in: query
+          required: true
+          example: 1
+        - name: date
+          type: string
+          in: query
+          required: true
+          example: 20/08/2024
+        - name: split
+          in: query
+          required: true
+          example: true
+        - name: lang
+          type: number
+          in: query
+          required: true
+          example: en
+      responses:
+        "200":
+          $ref: "#/components/responses/success"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedException"
+
+  /api-function/prediction/weekly-sun:
+    get:
+      description: |
+        - Get Weekly Sun Predictions Details
+        - week - thisweek, nextweek
+      summary: Get Weekly Sun Predictions Details
+      tags:
+        - Api Functions
+      parameters:
+        - name: personId
+          type: number
+          in: query
+          required: true
+          example: 1
+        - name: week
+          type: string
+          in: query
+          required: true
+          example: thisweek
+        - name: split
+          in: query
+          required: true
+          example: true
+        - name: lang
+          type: number
+          in: query
+          required: true
+          example: en
+      responses:
+        "200":
+          $ref: "#/components/responses/success"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedException"
+
+  /api-function/prediction/weekly-moon:
+    get:
+      description: |
+        - Get Weekly Moon Predictions Details
+        - week - thisweek, nextweek
+      summary: Get Weekly Moon Predictions Details
+      tags:
+        - Api Functions
+      parameters:
+        - name: personId
+          type: number
+          in: query
+          required: true
+          example: 1
+        - name: week
+          type: string
+          in: query
+          required: true
+          example: thisweek
+        - name: split
+          type: boolean
+          in: query
+          required: true
+          example: true
+        - name: lang
+          type: number
+          in: query
+          required: true
+          example: en
+      responses:
+        "200":
+          $ref: "#/components/responses/success"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedException"
+
+  /api-function/prediction/yearly:
+    get:
+      description: |
+        - Get Weekly Moon Predictions Details
+        - week - thisweek, nextweek
+      summary: Get Weekly Moon Predictions Details
+      tags:
+        - Api Functions
+      parameters:
+        - name: personId
+          type: number
+          in: query
+          required: true
+          example: 1
+        - name: year
+          type: string
+          in: query
+          required: true
+          example: 2024
+        - name: lang
+          type: number
+          in: query
+          required: true
+          example: en
+      responses:
+        "200":
+          $ref: "#/components/responses/success"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedException"
+
+  /data/api-categories:
+    get:
+      description: Get Api Categories and Sub Categories
+      summary: Get Api Categories and Sub Categories
+      tags:
+        - Data
+      responses:
+        "200":
+          $ref: "#/components/responses/success"
+        "412":
+          $ref: "#/components/responses/PreconditionFailedException"
